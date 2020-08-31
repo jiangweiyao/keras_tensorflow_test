@@ -2,6 +2,11 @@
 
 Quick Demonstration to test if your Keras/Tensorflow is working. Also includes a short guide on saving and loading models generated using keras. Depends on Conda
 
+## Clone Code from Repository
+```
+git clone https://github.com/jiangweiyao/keras_tensorflow_test.git
+```
+
 ## Install Miniconda if Conda is not present
 
 A script for installing and setting up Conda is included in this repository. Run it using the following command:
@@ -12,11 +17,6 @@ A script for installing and setting up Conda is included in this repository. Run
 Detailed instruction on the the Miniconda website if anything goes wrong:
 https://conda.io/projects/conda/en/latest/user-guide/install/linux.html
 
-
-## Clone Code from Repository
-```
-git clone https://github.com/jiangweiyao/keras_tensorflow_test.git
-```
 
 ## Build Conda Environment
 
