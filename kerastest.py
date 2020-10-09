@@ -1,116 +1,40 @@
-'''Trains a simple convnet on the MNIST dataset.
-Gets to 99.25% test accuracy after 12 epochs
-(there is still a lot of margin for parameter tuning).
-16 seconds per epoch on a GRID K520 GPU.
+# TensorFlow and tf.keras
+import tensorflow as tf
+from tensorflow import keras
 
-Change the sys.path.append(...) command to point to
-where you installed the library in the corresponding .sh
-script
-'''
- 
+# Helper libraries
+import numpy as np
 
-from __future__ import print_function
-import sys
-if not sys.warnoptions:
-    import warnings
-    warnings.simplefilter("ignore")
-sys.path.append("/scicomp/home/pqq7/python3.6.8_libraries/")  #set to where you installed your library
-import keras
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
-from keras import backend as K
+print(tf.__version__)
 
-from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
-config = ConfigProto()
-config.gpu_options.allow_growth = True
-session = InteractiveSession(config=config)
+fashion_mnist = keras.datasets.fashion_mnist
 
-batch_size = 128
-num_classes = 10
-epochs = 12
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
-# input image dimensions
-img_rows, img_cols = 28, 28
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-# the data, split between train and test sets
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+train_images = train_images / 255.0
 
-if K.image_data_format() == 'channels_first':
-    x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
-    x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_cols)
-    input_shape = (1, img_rows, img_cols)
-else:
-    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
-    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
-    input_shape = (img_rows, img_cols, 1)
- 
+test_images = test_images / 255.0
 
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
-x_train /= 255
-x_test /= 255
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(10)
+])
 
-print('x_train shape:', x_train.shape)
-print(x_train.shape[0], 'train samples')
-print(x_test.shape[0], 'test samples')
-
- 
-
-# convert class vectors to binary class matrices
-
-y_train = keras.utils.to_categorical(y_train, num_classes)
-
-y_test = keras.utils.to_categorical(y_test, num_classes)
-
- 
-
-model = Sequential()
-
-model.add(Conv2D(32, kernel_size=(3, 3),
-
-                 activation='relu',
-
-                 input_shape=input_shape))
-
-model.add(Conv2D(64, (3, 3), activation='relu'))
-
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Dropout(0.25))
-
-model.add(Flatten())
-
-model.add(Dense(128, activation='relu'))
-
-model.add(Dropout(0.5))
-
-model.add(Dense(num_classes, activation='softmax'))
-
- 
-
-model.compile(loss=keras.losses.categorical_crossentropy,
-
-              optimizer=keras.optimizers.Adadelta(),
-
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
- 
+model.fit(train_images, train_labels, epochs=10)
 
-model.fit(x_train, y_train,
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 
-          batch_size=batch_size,
+print('\nTest accuracy:', test_acc)
 
-          epochs=epochs,
+probability_model = tf.keras.Sequential([model,
+                                         tf.keras.layers.Softmax()])
 
-          verbose=1,
 
-          validation_data=(x_test, y_test))
-
-score = model.evaluate(x_test, y_test, verbose=0)
-
-print('Test loss:', score[0])
-
-print('Test accuracy:', score[1])

@@ -1,5 +1,5 @@
-from keras.models import Sequential
-from keras.layers import Dense
+import tensorflow as tf
+from tensorflow import keras
 import numpy
 
 
@@ -14,9 +14,15 @@ X = dataset[:,0:8]
 Y = dataset[:,8]
 
 # create trivial 1 hidden layer model
-model = Sequential()
-model.add(Dense(12, input_dim=8, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+model = keras.Sequential([
+    keras.layers.Dense(12, input_dim=8, activation='relu'),
+    keras.layers.Dense(1, activation='sigmoid')
+])
+
+
+#model = Sequential()
+#model.add(Dense(12, input_dim=8, activation='relu'))
+#model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Fit the model

@@ -1,10 +1,14 @@
-from numpy import loadtxt
-from keras.models import load_model
+import tensorflow as tf
+from tensorflow import keras
+import numpy
 
-model = load_model('model.h5')
+print(tf.__version__)
+
+
+model = tf.keras.models.load_model('model.h5')
 model.summary()
 
-dataset = loadtxt("pima-indians-diabetes.data.csv", delimiter=",")
+dataset = numpy.loadtxt("pima-indians-diabetes.data.csv", delimiter=",")
 
 X = dataset[:,0:8]
 Y = dataset[:,8]
