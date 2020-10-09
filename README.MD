@@ -22,12 +22,12 @@ https://conda.io/projects/conda/en/latest/user-guide/install/linux.html
 
 #### For CPU Keras and Tensorflow
 ```
-conda create -c conda-forge --name MachineLearning python=3 keras tensorflow
+conda create -c conda-forge --name MachineLearning python=3 tensorflow=2.2.0
 ```
 
 #### For GPU Keras and Tensorflow
 ```
-conda create -c conda-forge --name MachineLearning-GPU python=3 keras-gpu tensorflow-gpu
+conda create -c conda-forge --name MachineLearning-GPU python=3 tensorflow-gpu=2.2.0
 ```
 
 ## Activate Environment
